@@ -1,0 +1,240 @@
+/* Estilos para la vista de factura */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-size: 12px;
+}
+
+
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+.logo2 {
+  width: 100px;
+  height: auto;
+}
+
+.col-2 {
+    width: 16.66%;
+    float: left;
+}
+
+.col-3 {
+    width: 25%;
+    float: left;
+}
+.col-4 {
+    width: 33.33%;
+    float: left;
+}
+
+.col-5 {
+    width: 41.66%;
+    float: left;
+}
+
+.col-6 {
+    width: 50%;
+    float: left;
+}
+
+.col-7 {
+    width: 58.33%;
+    float: left;
+}
+
+.col-8 {
+    width: 66.66%;
+    float: left;
+}
+
+.col-12 {
+    width: 98%;
+    /* float: left; */
+}
+.info-empresa {
+    margin-top: -10px;
+}
+.info {
+    font-size: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tabla-indentificador {
+    text-align: center;
+    padding: 5px;
+    background-color: #dcdde2;
+    border-radius: 5px;
+}
+.tabla-indentificador2 {
+    text-align: left;
+    padding: 3px;
+    background-color: #dcdde2;
+    border-radius: 5px;
+}
+
+.tabla-articulos {
+    
+    padding: 3px;
+    background-color: #dcdde2;
+    border-radius: 15px;
+}
+
+
+.identificador {
+    text-align: center;
+    padding: 5px;
+}
+
+
+
+.info-cfdi {
+    font-size: 10px;
+}
+
+.info-cliente {
+    padding: 5px 0px 5px 0px;
+    font-size: 13px;
+    /* le ponemos negrita */
+    font-weight: bold;
+}
+
+.info-rfc {
+    padding: 0px 0px 15px 0px;
+    font-size: 13px;
+    /* le ponemos negrita */
+}
+
+.info-domicilio {
+    padding: 5px 0px 10px 0px;
+    font-size: 12px;
+    /* le ponemos negrita */
+}
+
+.info-regimen {
+    padding: 5px 0px 10px 0px;
+    font-size: 13px;
+    /* le ponemos negrita */
+}
+
+.info-CP {
+    padding: 0px 0px 15px 0px;
+    font-size: 13px;
+    /* le ponemos negrita */
+}
+
+.money {
+    text-align: right;
+}
+
+.impuestos {
+    font-size: 10px;
+}
+
+.totales {
+    font-size: 12px;
+    /* hacemos un espaciado entre cada linea */
+    line-height: 1.5;
+}
+
+.totales2 {
+    font-size: 15px;
+    padding: 5px 0px 5px 0px;
+    background-color: #dcdde2;
+}
+
+
+
+
+
+ .sellos {
+    font-size: 8px;
+    word-wrap: break-word;
+    
+    /* margin-bottom: 5px; */
+    /* width: 60%; */
+
+}
+ .sellos2 {
+    font-size: 12px;
+    word-wrap: break-word;
+    /* margin-bottom: 5px; */
+    /* width: 60%; */
+
+}
+ .sellos3 {
+    font-size: 11px;
+    word-wrap: break-word;
+    /* margin-bottom: 5px; */
+    /* width: 60%; */
+
+}
+
+.footer{
+    padding: 3  px;
+    background-color: #dcdde2;
+    border-radius: 5px;
+}
+
+.codigo {
+    float: right;
+    display: block;
+    /* margin-top: 15px; */
+    /* width: 25%; */
+}
+.qr{
+    width: 50% !important;
+    height: 50% !important;
+}
+.footer2 {
+    font-size: 9px;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.codigo {
+    float: right;
+    display: block;
+    margin-top: 20px;
+}
+
+.representacion {
+    font-size: 10px;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+/* .certificados div {
+    display: inline-block;
+}
+
+.certificados div:last-child {
+    float: right;
+}
+
+.certificados div:first-child {
+    float: left;
+} */
+
+@page {
+    size: 9in 12in;
+    margin: .5cm;
+    /* ponemos que el margen de abaajo sea de .5cm */
+    margin-bottom: .5cm;
+}
+
+

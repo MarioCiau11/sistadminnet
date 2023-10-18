@@ -1,0 +1,452 @@
+@extends('layouts.layout')
+
+@section('content')
+    <?php $existe = false; ?>
+    @foreach (auth()->user()->getAllPermissions()->where('categoria', '=', 'Inventarios')->pluck('name')->toArray() as $permisos)
+        <?php
+        $mov = substr($permisos, 0, -2);
+        $letra = substr($permisos, -1);
+        ?>
+        @if ($letra === 'E')
+            <?php
+            $existe = true;
+            ?>
+        @endif
+    @endforeach
+    <div class="mainpanel">
+        <div class="pageheader">
+            <div class="media display-space-between">
+                <div>
+                    <div class="pageicon pull-left mr10">
+                        <span class="fa-solid fa-boxes-stacked"></span>
+                    </div>
+                    <div class="media-body">
+                        <ul class="breadcrumb">
+                            <li><a href="{{ route('dashboard.index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                            <li>Inventarios</li>
+                        </ul>
+                        <h4>Inventarios</h4>
+                        <div class="breadcrumb">
+                            <span>Crea operaciones entre tus sucursales y/o almacenes Controla tu Stock de manera fácil y
+                                segura.</span>
+                        </div>
+                    </div>
+                </div>
+                @if ($existe)
+                    <div class="object-create">
+                        <a href="{{ route('vista.modulo.inventarios.create-inventario') }}" class="btn btn-success">Crear
+                            Proceso/Operación</a>
+                    </div>
+                @endif
+
+            </div><!-- media -->
+        </div><!-- pageheader -->
+
+        <div class="contentpanel">
+            <div class="row row-stat">
+                {!! Form::open(['route' => 'logistica.inventarios.filtro', 'method' => 'POST']) !!}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('nameFolio', 'Folio', ['class' => 'negrita']) !!}
+                        {!! Form::text('nameFolio', null, ['class' => 'form-control']) !!}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('nameMov', 'Proceso/Operación', ['class' => 'negrita']) !!}
+                        {!! Form::select(
+                            'nameMov',
+                            [
+                                'Todos' => 'Todos',
+                                'Ajuste de Inventario' => 'Ajuste de Inventario',
+                                'Transferencia entre Alm.' => 'Transferencia entre Alm.',
+                                'Salida por Traspaso' => 'Salida por Traspaso',
+                                'Tránsito' => 'Tránsito',
+                                'Entrada por Traspaso' => 'Entrada por Traspaso',
+                            ],
+                            session()->has('nameMov') ? session()->get('nameMov') : null,
+                            ['id' => 'select-search-hided', 'class' => 'widthAll select-movement'],
+                        ) !!}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('status', 'Estatus/Estado', ['class' => 'negrita']) !!}
+                        {!! Form::select(
+                            'status',
+                            [
+                                'Todos' => 'Todos',
+                                'INICIAL' => 'INICIAL',
+                                'POR AUTORIZAR' => 'POR AUTORIZAR',
+                                'FINALIZADO' => 'FINALIZADO',
+                                'CANCELADO' => 'CANCELADO',
+                            ],
+                            session()->has('status') ? session()->get('status') : null,
+                            ['id' => 'select-search-hide', 'class' => 'widthAll select-status'],
+                        ) !!}
+                    </div>
+                </div>
+
+                <div class="col-md-12"></div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {!! Form::label('nameFecha', 'Fecha', ['class' => 'negrita']) !!}
+                        {!! Form::select(
+                            'nameFecha',
+                            [
+                                'Hoy' => 'Hoy',
+                                'Ayer' => 'Ayer',
+                                'Semana' => 'Semana',
+                                'Mes' => 'Mes',
+                                'Año Móvil' => 'Año Móvil',
+                                'Año Pasado' => 'Año Pasado',
+                                'Rango Fechas' => 'Rango Fechas',
+                            ],
+                            session()->has('nameFecha') ? session()->get('nameFecha') : 'Mes',
+                        
+                            ['id' => 'select-fecha', 'class' => 'widthAll select-status'],
+                        ) !!}
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('nameUsuario', 'Usuario', ['class' => 'negrita']) !!}
+                        {!! Form::select(
+                            'nameUsuario',
+                            $select_users,
+                            session()->has('nameUsuario') ? session()->get('nameUsuario') : auth()->user()->username,
+                            ['id' => 'select-search-hide', 'class' => 'widthAll select-status'],
+                        ) !!}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('nameSucursal', 'Sucursal', ['class' => 'negrita']) !!}
+                        {!! Form::select(
+                            'nameSucursal',
+                            $select_sucursales,
+                            session()->has('nameSucursal') ? session()->get('nameSucursal') : session('sucursal')->branchOffices_key,
+                        
+                            ['id' => 'select-search-hide', 'class' => 'widthAll select-status'],
+                        ) !!}
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-8 fecha-rango">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {!! Form::label('nameFechaInicio', 'Fecha Inicio', ['class' => 'negrita']) !!}
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="fechaInicio" id="fechaInicial"
+                                    placeholder="DD-MM-YYYY" autocomplete="off"
+                                    value="{{ session()->has('fechaInicio') ? session()->get('fechaInicio') : '' }}">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div><!-- input-group -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group  form-group">
+                            {!! Form::label('nameFechaFinal', 'Fecha Final', ['class' => 'negrita']) !!}
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="fechaFinal" id="fechaFinal"
+                                    placeholder="DD-MM/-YYYY" autocomplete="off"
+                                    value="{{ session()->has('fechaFinal') ? session()->get('fechaFinal') : '' }}">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div><!-- input-group -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+
+                    <a href="{{ route('vista.modulo.inventarios') }}" class="btn btn-default">Restablecer</a>
+                    {!! Form::submit('Búsqueda', ['class' => 'btn btn-primary', 'name' => 'action']) !!}
+                    {!! Form::submit('Exportar excel', ['class' => 'btn btn-info', 'name' => 'action']) !!}
+                    {!! Form::close() !!}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="btn-columns">
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-sm mt5 btn-white border dropdown-toggle"
+                                type="button">
+                                Columnas <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="shCol" class="dropdown-menu dropdown-menu-sm pull-right">
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Opciones', '0', true, ['id' => 'checkOpciones']) !!}
+                                        {!! Form::label('checkOpciones', 'Opciones', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('name', '1', true, ['id' => 'checkName']) !!}
+                                        {!! Form::label('checkName', 'Proceso/Operación', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('position', '2', true, ['id' => 'checkPosition']) !!}
+                                        {!! Form::label('checkPosition', 'Folio', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('office', '3', true, ['id' => 'checkOffice']) !!}
+                                        {!! Form::label('checkOffice', 'Fecha', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Salary', '4', false, ['id' => 'checkSalary']) !!}
+                                        {!! Form::label('checkSalary', 'Concepto de la Operación', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Age', '5', true, ['id' => 'checkAge']) !!}
+                                        {!! Form::label('checkAge', 'Moneda', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Date', '6', false, ['id' => 'checkDate']) !!}
+                                        {!! Form::label('checkDate', 'Tipo de Cambio', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Referencia', '8', false, ['id' => 'checkReferencia']) !!}
+                                        {!! Form::label('checkReferencia', 'Notas', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Sucursal', '9', true, ['id' => 'checkSucursal']) !!}
+                                        {!! Form::label('checkSucursal', 'Sucursal', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Almacen', '10', true, ['id' => 'checkAlmacen']) !!}
+                                        {!! Form::label('checkAlmacen', 'Almacen', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('AlmacenDestino', '11', true, ['id' => 'checkAlmacenDestino']) !!}
+                                        {!! Form::label('checkAlmacenDestino', 'Almacen Destino', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Usuario', '12', true, ['id' => 'checkUsuario']) !!}
+                                        {!! Form::label('checkUsuario', 'Usuario', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Estatus', '13', true, ['id' => 'checkEstatus']) !!}
+                                        {!! Form::label('checkEstatus', 'Estatus/Estado', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ckbox ckbox-primary">
+                                        {!! Form::checkbox('Total', '14', true, ['id' => 'checkTotal']) !!}
+                                        {!! Form::label('checkTotal', 'Total', ['class' => 'negrita']) !!}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{-- En el controlador se pasa la data filtrada y se le enviamos al index como json_encode y en la vista usamos json_decode para
+            manipular los datos. --}}
+                {{-- @if (session('test'))
+               {{  session('test')['name'] }}
+            @else
+            {{$message}}
+            @endif --}}
+
+
+                <div class="col-md-12">
+                    <div class="panel table-panel">
+                        <table id="shTable" class="table table-striped table-bordered widthAll">
+                            <thead class="">
+                                <tr>
+                                    <th></th>
+                                    <th>Proceso/Operación</th>
+                                    <th>Folio</th>
+                                    <th>Fecha</th>
+                                    <th>Concepto de la Operación</th>
+                                    <th>Moneda</th>
+                                    <th>Tipo de Cambio</th>
+                                    <th>Notas</th>
+                                    <th>Sucursal</th>
+                                    <th>Almacén</th>
+                                    <th>Almacén Destino</th>
+                                    <th>Usuario</th>
+                                    <th>Estatus/Estado</th>
+                                    <th>Total</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+
+                                @if (session()->has('inventarios_filtro_array'))
+                                    @foreach (session('inventarios_filtro_array') as $inventario)
+                                        @include('include.modulos.inventarioItem')
+                                    @endforeach
+                                @else
+                                    @foreach ($inventarios as $inventario)
+                                        @include('include.modulos.inventarioItem')
+                                    @endforeach
+                                @endif
+
+
+
+                            </tbody>
+                        </table>
+                    </div><!-- panel -->
+                    {{-- <div class="panel table-panel">
+                    <table id="shTable" class="table table-striped table-bordered widthAll">
+                        <thead class="">
+                            <tr>
+                                <th></th>
+                                <th>Proceso/Operación</th>
+                                <th>Folio</th>
+                                <th>Fecha</th>
+                                <th>Concepto de la Operación</th>
+                                <th>Moneda</th>
+                                <th>Tipo de Cambio</th>
+                                <th>Fecha de Vencimiento</th>
+                                <th>Notas</th>
+                                <th>Sucursal</th>
+                                <th>Almacén</th>
+                                <th>Almacén Destino</th>
+                                <th>Usuario</th>
+                                <th>Estatus/Estado</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                 
+                        <tbody>
+
+
+                                @if (session()->has('inventarios_filtro_array'))
+                                    @foreach (session('inventarios_filtro_array') as $inventario)
+                                        @include('include.modulos.inventarioItem')
+                                    @endforeach
+                                @else
+                                    @foreach ($inventarios as $inventario)
+                                        @include('include.modulos.inventarioItem')
+                                    @endforeach
+                                @endif
+
+                        </tbody>
+                    </table>
+                </div><!-- panel --> --}}
+
+                </div>
+
+            </div>
+            <div>
+            </div>
+
+            @include('include.mensaje')
+
+            <script src="{{ asset('js/language/DatePicker/datePicker.js') }}"></script>
+            <script>
+                jQuery(document).ready(function() {
+                    $.datepicker.setDefaults($.datepicker.regional["es"]);
+
+                    const $fecha_rango = $('.fecha-rango');
+                    const $fechaInicio = $('#fechaInicial');
+                    const $fechaFinal = $('#fechaFinal');
+                    const $fecha_select = jQuery('#select-fecha');
+
+                    $fecha_select.val() == 'Rango Fechas' ? $fecha_rango.show() : $fecha_rango.hide();
+
+
+
+                    const $form = jQuery('#formValidate');
+
+                    jQuery(
+                            '.select-search-hide, .select-movement, .select-user, .select-sucursal, .select-fecha, .select-money, .select-status'
+                        )
+                        .select2({
+                            minimumResultsForSearch: -1
+                        });
+
+                    jQuery('.datepicker').datepicker({
+                        dateFormat: 'yy-mm-dd',
+                    });
+
+                    $fecha_select.on('change', function() {
+                        let option = jQuery(this).val();
+
+                        if (option === 'Rango Fechas') {
+                            $fecha_rango.show();
+                        } else {
+                            $fechaInicio.val('');
+                            $fechaFinal.val('');
+                            $fecha_rango.hide();
+                        }
+                    });
+
+                    //Validamos los inputs de rangos de fechas
+                    $form.validate({
+                        rules: {
+                            fechaInicio: {
+                                required: true,
+                                date: true
+                            },
+                            fechaFinal: {
+                                required: true,
+                                date: true
+
+                            }
+                        },
+                        messages: {
+                            fechaInicio: {
+                                required: 'Ingrese una fecha de inicio',
+                                date: 'Ingrese una fecha válida'
+                            },
+                            fechaFinal: {
+                                required: 'Ingrese una fecha de fin',
+                                date: 'Ingrese una fecha válida'
+                            }
+                        },
+                        highlight: function(element) {
+                            jQuery(element).closest(".form-group").addClass("has-error");
+                        },
+                        unhighlight: function(element) {
+                            jQuery(element).closest(".form-group").removeClass("has-error");
+                        },
+                        success: function(element) {
+                            jQuery(element).closest(".form-group").removeClass("has-error");
+                        },
+                    });
+
+
+
+                });
+            </script>
+
+        @endsection

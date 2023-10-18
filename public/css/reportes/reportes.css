@@ -1,0 +1,229 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+/* th, td {
+    width: 25%;
+    text-align: center;
+   padding: 0.6em;
+}
+caption {
+   padding: 0.6em;
+} */
+
+.page-break {
+    page-break-after: always;
+}
+body {
+    font-family: helvetica;
+    font-size: 12px;
+    color: black;
+    text-align: center;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.ancho {
+    width: 100%;
+    text-align: center;
+}
+
+.cabecera {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+
+.cabecera .logo img {
+    width: 100%;
+    max-width: 150px;
+    height: 100px;
+    height: 100%;
+    max-height: 100px;
+    margin: auto;
+}
+
+.info-empresa,
+.logo,
+.info-compra {
+    margin: auto;
+    text-align: center;
+    width: 33.33%;
+}
+
+.cabecera .info-empresa h3,
+.cabecera .info-compra h3,
+.cabecera .info-compra p {
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.folio-bold {
+    font-weight: normal;
+}
+
+.informacion-proveedor {
+    margin: auto;
+    margin-top: 10px;
+    width: 65%;
+}
+
+.informacion-proveedor tr td {
+    text-align: left;
+    padding: 10px;
+}
+
+.informacion-proveedor tr td:nth-child(2) {
+    border: 1px solid black;
+    width: 100%;
+}
+
+.informacion-ventasContado {
+    width: 100%;
+}
+
+.informacion-ventasContado tr td {
+
+    text-align: center;
+}
+
+.informacion-prov2 {
+    width: 100%;
+}
+
+.informacion-prov2 tr td {
+    text-align: center;
+}
+
+.informacion-prov2 tr td:nth-child(2) {
+    width: 50%;
+    border-collapse: collapse;
+}
+
+.informacion-proveedor2 {
+    margin: auto;
+    margin-top: 10px;
+    width: 0%;
+    padding: auto;
+}
+
+.informacion-proveedor2 tr td {
+    text-align: center;
+    padding: 10px;
+}
+
+.articulos-table {
+    margin: auto;
+    width: 90%;
+    margin-top: 25px;
+}
+.articulos-table tr:nth-child(1) th {
+    border: 1px solid black;
+}
+
+.articulos-table2 {
+    margin: auto;
+    width: 90%;
+    margin-top: 25px;
+}
+.articulos-table2 tr:nth-child(1) th {
+    border: 1px solid black;
+}
+
+.informacion-proveedor3 {
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 100px;
+    width: 100%;
+}
+
+.informacion-proveedor3 tr td {
+    text-align: center;
+}
+
+.articulos-table2 {
+    margin: auto;
+    width: 90%;
+    margin-top: auto;
+    padding: auto;
+    margin-bottom: 30px;
+}
+.articulos-table2 tr:nth-child(1) td {
+    border: 1px solid black;
+}
+.articulos-table2 tr:nth-child(1) th {
+    border: 1px solid black;
+}
+
+.articulos-table3 {
+    margin: auto;
+    width: 80%;
+    margin-top: 30px;
+}
+
+.articulos-table4 {
+    margin: auto;
+    width: 90%;
+    margin-top: 25px;
+}
+.articulos-table tr:nth-child(1) th {
+    border: 1px solid black;
+}
+
+.ventas-table {
+    margin: auto;
+    width: 156.8%;
+    margin-top: 5px;
+}
+
+.costos-desglosados {
+    margin: auto;
+    width: 90%;
+    margin-top: 30px;
+}
+
+.anchoCompleto {
+    width: 50%;
+}
+
+.numeros-reportes {
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.costos-desglosados2 {
+    margin: auto;
+    width: 80%;
+    margin-top: 30px;
+}
+
+.anchoCompleto2 {
+    width: 80%;
+}
+
+.numeros-reportes2 {
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.informacion-categoria {
+    width: 100%;
+
+}
+
+.informacion-categoria tr td {
+    text-align: center;
+}
+
+.informacion-categoria tr td:nth-child(2) {
+    width: 50%;
+    border-collapse: collapse;
+}
+
+.articulos-lista {
+    margin: auto;
+    width: 50%;
+}
+.articulos-lista tr:nth-child(1) th {
+    border: 1px solid black;
+}

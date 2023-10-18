@@ -1,0 +1,165 @@
+@extends('layouts.layout')
+
+@section('content')
+<div class="mainpanel">
+    <div class="contentpanel">
+        <div class="row row-stat">
+            <div class="contenedor-formulario">
+                {!! Form::open(['route' => 'configuracion.condiciones-credito.store', 'id' => 'basicForm']) !!}
+
+                {!! Form::macro('labelValidacion', function ($name, $labelName, $classes){
+                    return "<label for= '".$name."' class= '".$classes."'>".$labelName."<span class='asterisk'> *</span> </label>";
+                }) !!}
+
+                <h2 class="text-black">Datos generales del término</h2>
+        
+                <div class="col-md-9">
+                    <div class="form-group mt10">
+                        {!! Form::labelValidacion('nameCondicionCredito', 'Nombre', 'negrita') !!}
+                         {!! Form::text('nameCondicionCredito', $condCredito['creditConditions_name'],['class'=>'form-control', 'disabled']) !!}
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group mt10">
+                         {!! Form::labelValidacion('tipoCredito', 'Tipo de término', 'negrita') !!}
+                        {!! Form::select('tipoCredito', ['Contado' => 'Contado', 'Crédito' => 'Crédito'], $condCredito['creditConditions_type'], array('id' => 'select-search-tipoCredito', "class" => 'widthAll select-status', 'disabled')) !!} 
+                    </div>
+                </div>
+
+                <div class="col-md-12"></div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        {!! Form::label('vencimiento', 'Días de Vencimiento', array('class' => 'negrita')) !!}
+                         {!! Form::number('vencimiento', $condCredito['creditConditions_days'],['class'=>'form-control', 'min' => '1', 'disabled']) !!}
+                    </div>
+                </div>
+
+
+                 <div class="col-md-2">
+                    <div class="form-group">
+                        {!! Form::label('tiposDias', 'Tipos de Días', array('class' => 'negrita')) !!}
+
+                        {!! Form::select('tiposDias', ['Naturales' => 'Naturales', 'Hábiles' => 'Hábiles'],trim($condCredito['creditConditions_typeDays']) , array('id' => 'select-search-hide-tiposDias', "class" => 'widthAll select-status', 'placeholder' => 'Seleccione uno...', 'disabled')) !!} 
+                    </div>
+                </div>
+
+                  <div class="col-md-2">
+                    <div class="form-group">
+                        {!! Form::label('diasHabiles', 'Dias Hábiles', array('class' => 'negrita')) !!}
+
+                        {!! Form::select('diasHabiles', ['Lun-Vie' => 'Lun-Vie', 'Lun-Sab' => 'Lun-Sab', 'Todos' => 'Todos'], trim($condCredito['creditConditions_workDays']) , array('id' => 'select-search-hide-diasHabiles', "class" => 'widthAll select-status', 'placeholder' => 'Seleccione uno...', 'disabled')) !!} 
+                    </div>
+                </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('metodoPago', 'Método de Pago', array('class' => 'negrita')) !!}
+                        {!! Form::select('metodoPago', $create_metodoPago_array, $condCredito['creditConditions_paymentMethod'], array('id' => 'select-basic-metodo-pago', "class" => 'widthAll select-status', 'disabled')) !!} 
+                    </div>
+                </div>
+
+                   <div class="col-md-2">
+                    <div class="form-group">
+                        {!! Form::label('status', 'Estatus', array('class' => 'negrita')) !!}
+
+                        {!! Form::select('status', ['Alta' => 'Alta', 'Baja' => 'Baja'], $condCredito['creditConditions_status'], array('id' => 'select-search-hide-status', "class" => 'widthAll select-status', 'disabled')) !!} 
+                    </div>
+                </div>      
+            
+             
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    jQuery(document).ready(function (){
+        jQuery('#select-search-hide-tiposDias, #select-search-tipoCredito, #select-search-hide-diasHabiles,#select-search-hide-status').select2({
+                    minimumResultsForSearch: -1
+        });
+
+        jQuery("#select-basic-metodo-pago, #select-basic-moneda").select2();
+
+        jQuery('#basicForm').validate({
+            rules:{
+                nameCondicionCredito:{
+                    required: true,
+                    maxlength: 50,
+               },
+                vencimiento: {
+                    required: function (){
+                        return $("#select-search-tipoCredito").val() === "Credito";
+                    }
+                },
+                tiposDias: {
+                    required: function (){
+                        return $("#select-search-tipoCredito").val() === "Credito";
+                    }
+                },
+
+                diasHabiles: {
+                    required: function(){
+                        return $("#select-search-tipoCredito").val() === "Credito";
+                    }
+                }
+            },
+            messages:{
+                    nameCondicionCredito:{
+                        required: 'Este campo es requerido',
+                        maxlength: jQuery.validator.format('Maximo de {0} caracteres')
+                    },
+                    vencimiento: {
+                        required: "Este campo es requerido",
+                    },
+                    tiposDias: {
+                        required: "Este campo es requerido",
+                    },
+                    diasHabiles:{
+                        required: "Este campo es requerido",
+                    }
+            },
+            highlight: function(element) {
+                jQuery(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                jQuery(element).closest('.form-group').removeClass('has-error');
+            },
+            success: function(element) {
+                jQuery(element).closest('.form-group').removeClass('has-error');
+            }
+        })
+
+        const tipoCredito =  jQuery('#select-search-tipoCredito');
+
+        if(tipoCredito.val() === 'Contado'){
+            jQuery('#vencimiento').attr('disabled', true);
+            jQuery('#select-search-hide-tiposDias').attr('disabled', true);
+            jQuery('#select-search-hide-diasHabiles').attr('disabled', true);
+        }
+        
+        tipoCredito.on('change', function (){
+            if(tipoCredito.val() === 'Contado'){
+                jQuery('#vencimiento').attr('disabled', true);
+                jQuery('#select-search-hide-tiposDias').attr('disabled', true);
+                jQuery('#select-search-hide-diasHabiles').attr('disabled', true);
+            }else{
+                jQuery('#vencimiento').attr('disabled', false);
+                jQuery('#select-search-hide-tiposDias').attr('disabled', false);
+                jQuery('#select-search-hide-diasHabiles').attr('disabled', false);
+            }
+        });
+
+        jQuery('#select-search-hide-tiposDias').on('change', function (){
+            console.log();
+            if(jQuery('#select-search-hide-tiposDias').val() === 'Naturales' || jQuery('#select-search-hide-tiposDias').val() === ''){
+                jQuery('#select-search-hide-diasHabiles').attr('disabled', true);
+            }else{
+                jQuery('#select-search-hide-diasHabiles').attr('disabled', false);
+            }
+        });
+    });
+</script>
+@endsection
